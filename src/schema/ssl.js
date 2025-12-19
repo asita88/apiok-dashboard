@@ -5,3 +5,12 @@ export const schemaSsl = {
   certificate: [{ required: true, message: '证书内容不能为空' }],
   private_key: [{ required: true, message: '私钥内容不能为空' }]
 }
+
+const domainFormat = {
+  pattern: /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/,
+  message: '请输入有效的域名格式，例如：example.com'
+}
+
+export const schemaLetsEncrypt = {
+  domain: [{ required: true, message: '域名不能为空' }, domainFormat]
+}

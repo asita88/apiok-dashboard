@@ -83,3 +83,18 @@ export const $sslUpdate = async (resId, data) => {
     data: data
   })
 }
+
+const letsencryptRequest = '/admin/letsencrypt/request'
+
+/**
+ * 申请 Let's Encrypt 证书
+ * @param {*} data 申请数据 { domain: string, enable: number }
+ * @returns
+ */
+export const $letsencryptRequest = async data => {
+  return request.request({
+    url: letsencryptRequest,
+    method: 'POST',
+    data: data
+  })
+}

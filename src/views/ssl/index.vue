@@ -35,8 +35,12 @@
       />
 
       <!-- 新增 -->
-      <a-button type="primary" @click="fn.drawerOperate(null, drawer.typeRouter)">
+      <a-button type="primary" @click="fn.drawerOperate(null, drawer.typeRouter)" style="margin-right: 10px">
         <i class="iconfont icon-addNode" />新增证书</a-button
+      >
+      <!-- Let's Encrypt 申请 -->
+      <a-button type="primary" @click="fn.drawerOperateLetsEncrypt()">
+        <i class="iconfont icon-addNode" />申请 Let's Encrypt 证书</a-button
       >
     </div>
 
@@ -138,13 +142,14 @@
 <script>
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
 import SslOperate from './operate'
+import SslOperateLetsEncrypt from './operate-letsencrypt'
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { formatDate } from '@/utils/time'
 import { $sslList, $sslEnable, $sslDelete } from '@/api'
 
 export default {
-  components: { SslOperate },
+  components: { SslOperate, SslOperateLetsEncrypt },
 
   setup() {
     // 初始化——路由列表
@@ -283,6 +288,15 @@ export default {
         drawer.title = '编辑证书'
       }
     }
+
+    // Let's Encrypt 申请抽屉操作
+    const drawerOperateLetsEncrypt = async () => {
+      drawer.currentResId = null
+      drawer.visible = true
+      drawer.componentName = 'SslOperateLetsEncrypt'
+      drawer.width = '50%'
+      drawer.title = '申请 Let\'s Encrypt 证书'
+    }
     // 抽屉状态变化后钩子函数
     const afterVisibleChange = async () => {
       // 抽屉关闭时销毁抽屉内的组件（这里后期可能需要进一步优化）
@@ -312,6 +326,7 @@ export default {
       showSizeChange,
       deleteFunc,
       drawerOperate,
+      drawerOperateLetsEncrypt,
       afterVisibleChange,
       componentCloseDrawer,
       componentRefreshList
