@@ -47,15 +47,13 @@
       <a-divider orientation="left">高级配置</a-divider>
 
       <a-form-item label="请求体大小限制：" name="client_max_body_size">
-        <a-input-number
+        <a-input
           v-model:value="data.formData.client_max_body_size"
-          :min="0"
-          :precision="0"
-          placeholder="0表示无限制（单位：字节）"
+          placeholder="例如：100M、1G、500K（0表示无限制）"
           style="width: 100%"
         />
         <div style="color: #999; font-size: 12px; margin-top: 6px; line-height: 1.5">
-          0表示无限制，支持单位：k(千字节), m(兆字节), g(千兆字节)
+          支持单位：k(千字节), m(兆字节), g(千兆字节)，例如：100M、1G、500K，0表示无限制
         </div>
       </a-form-item>
 
@@ -202,7 +200,7 @@ export default {
         protocol: '1',
         enable: false,
         service_domains: ref([defaultDomain]),
-        client_max_body_size: undefined,
+        client_max_body_size: '',
         chunked_transfer_encoding: undefined,
         proxy_buffering: undefined,
         proxy_cache: undefined,
@@ -356,8 +354,10 @@ export default {
       }
 
       // 处理新字段
-      if (formData.client_max_body_size === undefined || formData.client_max_body_size === null || formData.client_max_body_size === '') {
+      if (formData.client_max_body_size === undefined || formData.client_max_body_size === null || formData.client_max_body_size === '' || formData.client_max_body_size === '0') {
         delete formData.client_max_body_size
+      } else {
+        formData.client_max_body_size = String(formData.client_max_body_size).trim()
       }
       
       if (formData.chunked_transfer_encoding === undefined || formData.chunked_transfer_encoding === null) {
