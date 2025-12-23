@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Error404 from '@/layouts/error404'
 import Login from '@/views/user/login'
+import ChangePassword from '@/views/user/change-password'
 import Service from '@/views/services'
 import Router from '@/views/router'
 import Upstream from '@/views/upstream'
@@ -44,6 +45,26 @@ const routes = [
         path: '/ssl',
         name: 'ssl',
         component: Ssl
+      },
+      {
+        path: '/user/change-password',
+        name: 'change-password',
+        component: ChangePassword
+      },
+      {
+        path: '/user',
+        name: 'user',
+        component: () => import('@/views/user')
+      },
+      {
+        path: '/log',
+        name: 'log',
+        component: () => import('@/views/log')
+      },
+      {
+        path: '/global-plugin',
+        name: 'global-plugin',
+        component: () => import('@/views/global-plugin')
       }
     ]
   },

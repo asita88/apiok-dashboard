@@ -15,21 +15,39 @@
     >
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
         <a-menu-item key="service" @click="$router.push('/service')">
-          <i class="iconfont icon-fuwuqi" />
+          <AppstoreOutlined />
           <span>服务管理</span>
         </a-menu-item>
         <a-menu-item key="router" @click="$router.push('/router')">
-          <i class="iconfont icon-lianjie" />
+          <LinkOutlined />
           <span>路由管理</span>
         </a-menu-item>
         <a-menu-item key="upstream" @click="$router.push('/upstream')">
-          <i class="iconfont icon-jiedian" />
+          <ClusterOutlined />
           <span>上游管理</span>
         </a-menu-item>
         <a-menu-item key="ssl" @click="$router.push('/ssl')">
-          <i class="iconfont icon-zhengshu-copy" />
+          <SafetyCertificateOutlined />
           <span>证书管理</span>
         </a-menu-item>
+        <a-menu-item key="global-plugin" @click="$router.push('/global-plugin')">
+          <GlobalOutlined />
+          <span>全局插件</span>
+        </a-menu-item>
+        <a-sub-menu key="system">
+          <template #title>
+            <SettingOutlined />
+            <span>系统管理</span>
+          </template>
+          <a-menu-item key="user" @click="$router.push('/user')">
+            <UserOutlined />
+            <span>用户管理</span>
+          </a-menu-item>
+          <a-menu-item key="log" @click="$router.push('/log')">
+            <FileTextOutlined />
+            <span>操作日志</span>
+          </a-menu-item>
+        </a-sub-menu>
       </a-menu>
     </a-layout-sider>
 
@@ -51,10 +69,11 @@
           <a-sub-menu key="sub1">
             <template #title>
               <div class="user">
-                <span>{{ userEmail }}</span>
+                <span>{{ userName }}</span>
                 <img src="../assets/img/user.gif" />
               </div>
             </template>
+            <a-menu-item key="change-password" @click="changePassword">修改密码</a-menu-item>
             <a-menu-item key="logout" @click="logout">退出登录</a-menu-item>
           </a-sub-menu>
         </a-menu>
@@ -80,9 +99,29 @@
 import { watch, ref } from 'vue'
 import { $logout } from '@/api'
 import { message } from 'ant-design-vue'
+import {
+  AppstoreOutlined,
+  LinkOutlined,
+  ClusterOutlined,
+  SafetyCertificateOutlined,
+  GlobalOutlined,
+  SettingOutlined,
+  UserOutlined,
+  FileTextOutlined
+} from '@ant-design/icons-vue'
 import router from '@/router'
 import store from '@/store'
 export default {
+        components: {
+          AppstoreOutlined,
+          LinkOutlined,
+          ClusterOutlined,
+          SafetyCertificateOutlined,
+          GlobalOutlined,
+          SettingOutlined,
+          UserOutlined,
+          FileTextOutlined
+        },
   setup() {
     const selectedKeys = ref([router.currentRoute.value.name])
     const collapsed = ref(false)
@@ -100,16 +139,19 @@ export default {
       }
     }
 
+    const changePassword = () => {
+      router.push('/user/change-password')
+    }
+
     // 监听路由变化更新选中菜单
     watch(
-      () => router,
-      newRouter => {
-        selectedKeys.value[0] = newRouter.currentRoute.value.name
-      },
-      { deep: true }
+      () => router.currentRoute.value.name,
+      newName => {
+        selectedKeys.value = [newName]
+      }
     )
 
-    return { selectedKeys, collapsed, logout, userEmail: userInfo.email }
+    return { selectedKeys, collapsed, logout, changePassword, userName: userInfo.username || userInfo.email || '' }
   }
 }
 </script>

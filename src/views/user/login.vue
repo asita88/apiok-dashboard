@@ -16,8 +16,8 @@
           autocomplete="off"
           @finish="loginFn"
         >
-          <a-form-item label="邮箱" name="email" :rules="schemaUser.email">
-            <a-input v-model:value="form.email" />
+          <a-form-item label="用户名" name="username" :rules="schemaUser.userName">
+            <a-input v-model:value="form.username" />
           </a-form-item>
 
           <a-form-item label="密码" name="password" :rules="schemaUser.password">
@@ -45,7 +45,7 @@ export default {
   setup() {
     // 定义表单数据
     const form = reactive({
-      email: null,
+      username: null,
       password: null
     })
 
@@ -56,7 +56,7 @@ export default {
         message.error(msg)
       } else {
         if (data.token.length != 0) {
-          store.commit('user/setToken', { token: data.token, email: form.email })
+          store.commit('user/setToken', { token: data.token, username: form.username })
           router.replace('/')
           return
         }

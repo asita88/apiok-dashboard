@@ -45,7 +45,7 @@
 
     <a-form-item :wrapper-col="{ offset: 10, span: 16 }">
       <a-button html-type="submit" type="primary">保存</a-button>
-      <a-button style="margin-left: 20px" @click="fn.cancel(pluginConfigData.key)">取消</a-button>
+      <a-button style="margin-left: 20px" @click="fn.cancel(pluginConfigData?.key)">取消</a-button>
     </a-form-item>
   </a-form>
 </template>
@@ -158,7 +158,7 @@ export default {
           return
         } else {
           message.success(msg)
-          emit('pluginEditVisibleOff', props.pluginConfigData.key)
+          emit('pluginEditVisibleOff', props.pluginConfigData?.key)
           emit('componentRefreshList')
         }
       }

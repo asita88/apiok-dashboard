@@ -152,7 +152,7 @@
 
 <script>
 import { reactive, ref, onMounted } from 'vue'
-import { $pluginConfigList, $pluginConfigEnable, $pluginConfigDelete } from '@/api'
+import { $pluginConfigList, $pluginConfigEnable, $pluginConfigDelete, $globalPluginConfigList, $globalPluginConfigEnable, $globalPluginConfigDelete } from '@/api'
 import { message } from 'ant-design-vue'
 import { HookPluginKeyComponentMap, HookPluginTypeIdNameMap, HookPluginList } from '@/hooks'
 import Plugin404 from '../plugin/components/err404.vue'
@@ -163,9 +163,10 @@ import JwtAuth from '../plugin/components/jwtAuth.vue'
 import LimitReq from '../plugin/components/limitReq.vue'
 import LimitConn from '../plugin/components/limitConn.vue'
 import LimitCount from '../plugin/components/limitCount.vue'
+import Waf from '../plugin/components/waf.vue'
 
 export default {
-  components: { Plugin404, Cors, Mock, KeyAuth, JwtAuth, LimitReq, LimitConn, LimitCount },
+  components: { Plugin404, Cors, Mock, KeyAuth, JwtAuth, LimitReq, LimitConn, LimitCount, Waf },
 
   props: {
     currentResId: {
@@ -178,8 +179,8 @@ export default {
   emits: ['componentCloseDrawer', 'componentRefreshList'],
   setup(props, { emit }) {
     onMounted(() => {
-      if (props.currentResId !== null) {
-        getList(props.currentResId)
+      if (props.pluginConfigType === 3 || props.currentResId !== null) {
+        getList(props.currentResId || '')
       }
     })
 
@@ -236,7 +237,20 @@ export default {
 
     // 获取插件列表
     const getList = async resId => {
-      let { code, data: dataList, msg } = await $pluginConfigList(resId, props.pluginConfigType)
+      let code, dataList, msg
+      let result
+      if (props.pluginConfigType === 3) {
+        // 全局插件
+        result = await $globalPluginConfigList()
+        code = result.code
+        dataList = result.data
+        msg = result.msg
+      } else {
+        result = await $pluginConfigList(resId, props.pluginConfigType)
+        code = result.code
+        dataList = result.data
+        msg = result.msg
+      }
 
       if (code !== 0) {
         message.error(msg)
@@ -364,11 +378,22 @@ export default {
       let enableData = reactive({
         enable: record.enable == true ? 1 : 2
       })
-      let { code, msg } = await $pluginConfigEnable(
-        record.res_id,
-        enableData,
-        props.pluginConfigType
-      )
+      let code, msg
+      let result
+      if (props.pluginConfigType === 3) {
+        // 全局插件
+        result = await $globalPluginConfigEnable(record.res_id, enableData)
+        code = result.code
+        msg = result.msg
+      } else {
+        result = await $pluginConfigEnable(
+          record.res_id,
+          enableData,
+          props.pluginConfigType
+        )
+        code = result.code
+        msg = result.msg
+      }
 
       if (code !== 0) {
         message.error(msg)
@@ -386,7 +411,18 @@ export default {
 
     // 插件配置删除
     const deleteFunc = async record => {
-      let { code, msg } = await $pluginConfigDelete(record.res_id, props.pluginConfigType)
+      let code, msg
+      let result
+      if (props.pluginConfigType === 3) {
+        // 全局插件
+        result = await $globalPluginConfigDelete(record.res_id)
+        code = result.code
+        msg = result.msg
+      } else {
+        result = await $pluginConfigDelete(record.res_id, props.pluginConfigType)
+        code = result.code
+        msg = result.msg
+      }
       if (code !== 0) {
         message.error(msg)
         return

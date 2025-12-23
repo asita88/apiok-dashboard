@@ -325,6 +325,7 @@
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
 import RouterOperate from './operate'
 import PluginIndex from '../plugin'
+import RouterPlugin from './plugin'
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import {
@@ -340,8 +341,7 @@ import { HookEnableToName, HookProtocolToName, HookReleaseToName } from '@/hooks
 import store from '@/store'
 
 export default {
-  components: { RouterOperate, PluginIndex },
-
+  components: { RouterOperate, PluginIndex, RouterPlugin },
   setup() {
     // 初始化——路由列表
     onMounted(async () => {
@@ -622,9 +622,9 @@ export default {
       drawer.visible = true
 
       if (drawerType == drawer.typePlugin) {
-        drawer.componentName = 'PluginIndex'
-        drawer.title = '插件列表'
-        drawer.width = '65%'
+        drawer.componentName = 'RouterPlugin'
+        drawer.title = '插件配置'
+        drawer.width = '80%'
       } else {
         drawer.componentName = 'RouterOperate'
         drawer.width = '50%'

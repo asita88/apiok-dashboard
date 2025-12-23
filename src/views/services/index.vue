@@ -307,6 +307,7 @@
 import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN'
 import ServiceOperate from './operate'
 import PluginIndex from '../plugin'
+import ServicePlugin from './plugin'
 import { reactive, ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import {
@@ -321,7 +322,7 @@ import router from '@/router'
 import store from '@/store'
 
 export default {
-  components: { ServiceOperate, PluginIndex },
+  components: { ServiceOperate, PluginIndex, ServicePlugin },
 
   setup() {
     // 初始化——服务列表
@@ -528,9 +529,9 @@ export default {
       drawer.visible = true
 
       if (drawerType == drawer.typePlugin) {
-        drawer.componentName = 'PluginIndex'
-        drawer.title = '插件列表'
-        drawer.width = '65%'
+        drawer.componentName = 'ServicePlugin'
+        drawer.title = '插件配置'
+        drawer.width = '80%'
       } else {
         drawer.componentName = 'ServiceOperate'
         drawer.width = '50%'

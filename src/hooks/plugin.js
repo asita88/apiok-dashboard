@@ -8,7 +8,8 @@ export const HookPluginKeyComponentMap = function () {
     'jwt-auth': 'JwtAuth',
     'limit-req': 'LimitReq',
     'limit-conn': 'LimitConn',
-    'limit-count': 'LimitCount'
+    'limit-count': 'LimitCount',
+    waf: 'Waf'
   }
 }
 
