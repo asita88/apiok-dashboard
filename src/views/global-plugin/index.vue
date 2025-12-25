@@ -8,24 +8,26 @@
         />全局插件</a-breadcrumb-item
       >
     </a-breadcrumb>
-    <a-divider style="margin: 10px 0" />
+    <a-divider class="divider" />
 
-    <a-row :gutter="16">
+    <a-row :gutter="16" class="plugin-row">
       <!-- 左侧：插件类型列表 -->
       <a-col :span="8">
         <a-card title="插件类型" :bordered="true">
-          <a-input-search
-            v-model:value="data.searchKeyword"
-            placeholder="搜索插件"
-            style="margin-bottom: 16px"
-            @search="fn.searchPlugin"
-          />
+          <div class="card-content-wrapper">
+            <a-input-search
+              v-model:value="data.searchKeyword"
+              placeholder="搜索插件"
+              class="search-input"
+              @search="fn.searchPlugin"
+            />
 
-          <a-list
-            :data-source="filteredPluginList"
-            :loading="data.loading"
-            size="small"
-          >
+            <div class="plugin-list-container">
+            <a-list
+              :data-source="filteredPluginList"
+              :loading="data.loading"
+              size="small"
+            >
             <template #renderItem="{ item }">
               <a-list-item
                 :class="{ 'plugin-item-active': data.selectedPlugin?.res_id === item.res_id }"
@@ -49,17 +51,20 @@
               </a-list-item>
             </template>
           </a-list>
+            </div>
+          </div>
         </a-card>
       </a-col>
 
       <!-- 右侧：插件配置 -->
       <a-col :span="16">
         <a-card :title="data.selectedPlugin ? `配置 - ${data.selectedPlugin.plugin_key}` : '请选择插件'" :bordered="true">
-          <div v-if="!data.selectedPlugin" class="empty-state">
-            <a-empty description="请从左侧选择一个插件进行配置" />
-          </div>
+          <div class="plugin-config-container">
+            <div v-if="!data.selectedPlugin" class="empty-state">
+              <a-empty description="请从左侧选择一个插件进行配置" />
+            </div>
 
-          <div v-else>
+            <div v-else>
             <!-- 已配置的插件列表 -->
             <div v-if="data.configuredPlugins.length > 0" style="margin-bottom: 16px">
               <a-table
@@ -72,6 +77,12 @@
                 <template #bodyCell="{ column, record }">
                   <template v-if="column.dataIndex === 'config'">
                     <span v-html="fn.getConfigSummary(record.plugin_key, record.config)"></span>
+                  </template>
+                  <template v-if="column.dataIndex === 'description'">
+                    <a-tooltip :title="record.description" v-if="record.description">
+                      <span>{{ record.description }}</span>
+                    </a-tooltip>
+                    <span v-else style="color: #999;">-</span>
                   </template>
                   <template v-if="column.dataIndex === 'enable'">
                     <a-switch
@@ -122,6 +133,7 @@
                 <i class="iconfont icon-addNode" style="margin-right: 4px" />
                 添加配置
               </a-button>
+            </div>
             </div>
           </div>
         </a-card>
@@ -183,6 +195,7 @@ export default {
       configColumns: [
         { title: '配置名称', dataIndex: 'name', width: 150 },
         { title: '核心参数', dataIndex: 'config', width: 300 },
+        { title: '备注', dataIndex: 'description', width: 200 },
         { title: '启用', dataIndex: 'enable', width: 80 },
         { title: '操作', dataIndex: 'operation', width: 120 }
       ]
@@ -289,7 +302,11 @@ export default {
       if (!data.selectedPlugin) return
       data.pluginOpType = 2
       data.editConfigResId = record.res_id
-      data.editConfigData = record.config || {}
+      data.editConfigData = {
+        ...(record.config || {}),
+        name: record.name || '',
+        description: record.description || ''
+      }
       data.configComponentName = getComponentName(data.selectedPlugin.plugin_key)
       data.showConfigForm = true
     }
@@ -449,10 +466,29 @@ export default {
 <style lange="scss" scoped>
 .main {
   padding: 10px;
+  height: calc(100vh - 64px - 20px);
+  max-height: calc(100vh - 64px - 20px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .breadcrumb {
   margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.divider {
+  margin: 10px 0;
+  flex-shrink: 0;
+}
+
+.plugin-row {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
 }
 
 .plugin-item-active {
@@ -462,6 +498,53 @@ export default {
 
 .empty-state {
   padding: 40px 0;
+}
+
+:deep(.ant-col) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.ant-card) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.ant-card-body) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-content-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.search-input {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+
+.plugin-list-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.plugin-config-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 :deep(.ant-list-item) {

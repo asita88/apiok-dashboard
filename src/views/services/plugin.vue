@@ -63,6 +63,12 @@
                   <template v-if="column.dataIndex === 'config'">
                     <span v-html="fn.getConfigSummary(record.plugin_key, record.config)"></span>
                   </template>
+                  <template v-if="column.dataIndex === 'description'">
+                    <a-tooltip :title="record.description" v-if="record.description">
+                      <span>{{ record.description }}</span>
+                    </a-tooltip>
+                    <span v-else style="color: #999;">-</span>
+                  </template>
                   <template v-if="column.dataIndex === 'enable'">
                     <a-switch
                       v-model:checked="record.enable"
@@ -170,6 +176,7 @@ export default {
       configColumns: [
         { title: '配置名称', dataIndex: 'name', width: 150 },
         { title: '核心参数', dataIndex: 'config', width: 300 },
+        { title: '备注', dataIndex: 'description', width: 200 },
         { title: '启用', dataIndex: 'enable', width: 80 },
         { title: '操作', dataIndex: 'operation', width: 120 }
       ]
@@ -276,7 +283,11 @@ export default {
       if (!data.selectedPlugin) return
       data.pluginOpType = 2
       data.editConfigResId = record.res_id
-      data.editConfigData = record.config || {}
+      data.editConfigData = {
+        ...(record.config || {}),
+        name: record.name || '',
+        description: record.description || ''
+      }
       data.configComponentName = getComponentName(data.selectedPlugin.plugin_key)
       data.showConfigForm = true
     }

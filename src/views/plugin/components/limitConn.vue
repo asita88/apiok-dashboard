@@ -7,8 +7,12 @@
     autocomplete="off"
     @finish="fn.onSubmit"
   >
-    <a-form-item label="插件名称" name="name" :rules="schemaPluginLimitConn.name">
+    <a-form-item label="配置名称" name="name" :rules="schemaPluginLimitConn.name">
       <a-input v-model:value="data.formData.name" />
+    </a-form-item>
+
+    <a-form-item label="插件描述" name="description">
+      <a-textarea v-model:value="data.formData.description" :rows="2" placeholder="请输入插件配置描述" />
     </a-form-item>
 
     <a-form-item label="rate" name="rate" :rules="schemaPluginLimitConn.rate">
@@ -82,6 +86,7 @@ export default {
     const data = reactive({
       formData: {
         name: 'plugin-limit-conn',
+        description: '',
         rate: null,
         burst: null,
         default_conn_delay: null,
@@ -95,6 +100,9 @@ export default {
     if (props.pluginConfigData != null) {
       if (props.pluginConfigData.name != null) {
         data.formData.name = props.pluginConfigData.name
+      }
+      if (props.pluginConfigData.description != null) {
+        data.formData.description = props.pluginConfigData.description
       }
       if (props.pluginConfigData.rate != null) {
         data.formData.rate = props.pluginConfigData.rate
@@ -118,6 +126,7 @@ export default {
           target_id: props.targetResId ?? '',
           type: props.pluginConfigType ?? '',
           name: formData.name ?? '',
+          description: formData.description ?? '',
           enable: formData.enable == true ? 1 : 2,
           config: reactive({
             rate: formData.rate ?? '',
@@ -141,6 +150,7 @@ export default {
         // 更新插件配置
         let configData = reactive({
           name: formData.name ?? '',
+          description: formData.description ?? '',
           config: reactive({
             rate: formData.rate ?? '',
             burst: formData.burst ?? '',

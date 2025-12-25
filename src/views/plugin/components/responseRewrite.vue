@@ -7,7 +7,7 @@
     autocomplete="off"
     @finish="fn.onSubmit"
   >
-    <a-form-item label="插件名称" name="name" :rules="schemaPluginResponseRewrite.name">
+    <a-form-item label="配置名称" name="name" :rules="schemaPluginResponseRewrite.name">
       <a-input v-model:value="data.formData.name" />
     </a-form-item>
 

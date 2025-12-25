@@ -7,8 +7,12 @@
     autocomplete="off"
     @finish="fn.onSubmit"
   >
-    <a-form-item label="插件名称" name="name" :rules="schemaPluginLimitCount.name">
+    <a-form-item label="配置名称" name="name" :rules="schemaPluginLimitCount.name">
       <a-input v-model:value="data.formData.name" />
+    </a-form-item>
+
+    <a-form-item label="插件描述" name="description">
+      <a-textarea v-model:value="data.formData.description" :rows="2" placeholder="请输入插件配置描述" />
     </a-form-item>
 
     <a-form-item label="time_window" name="time_window" :rules="schemaPluginLimitCount.time_window">
@@ -71,6 +75,7 @@ export default {
     const data = reactive({
       formData: {
         name: 'plugin-limit-count',
+        description: '',
         time_window: null,
         count: null,
         enable: false
@@ -83,6 +88,9 @@ export default {
     if (props.pluginConfigData != null) {
       if (props.pluginConfigData.name != null) {
         data.formData.name = props.pluginConfigData.name
+      }
+      if (props.pluginConfigData.description != null) {
+        data.formData.description = props.pluginConfigData.description
       }
       if (props.pluginConfigData.time_window != null) {
         data.formData.time_window = props.pluginConfigData.time_window
@@ -102,6 +110,7 @@ export default {
           target_id: props.targetResId ?? '',
           type: props.pluginConfigType ?? '',
           name: formData.name ?? '',
+          description: formData.description ?? '',
           enable: formData.enable == true ? 1 : 2,
           config: reactive({
             time_window: formData.time_window ?? '',
@@ -124,6 +133,7 @@ export default {
         // 更新插件配置
         let configData = reactive({
           name: formData.name ?? '',
+          description: formData.description ?? '',
           config: reactive({
             time_window: formData.time_window ?? '',
             count: formData.count ?? ''

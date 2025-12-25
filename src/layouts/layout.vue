@@ -171,7 +171,7 @@ export default {
   margin: 10px;
   padding: 10px;
   background: #fff;
-  height: calc(100% - 20px);
+  height: calc(100%);
   overflow: hidden;
   display: flex;
   flex-direction: column;

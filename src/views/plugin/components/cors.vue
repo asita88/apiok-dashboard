@@ -7,8 +7,12 @@
     autocomplete="off"
     @finish="fn.onSubmit"
   >
-    <a-form-item label="插件名称" name="name" :rules="schemaPluginCors.name">
+    <a-form-item label="配置名称" name="name" :rules="schemaPluginCors.name">
       <a-input v-model:value="data.formData.name" />
+    </a-form-item>
+
+    <a-form-item label="插件描述" name="description">
+      <a-textarea v-model:value="data.formData.description" :rows="2" placeholder="请输入插件配置描述" />
     </a-form-item>
 
     <a-form-item label="allow_methods" name="allow_methods" :rules="schemaPluginCors.allow_methods">
@@ -74,6 +78,7 @@ export default {
     const data = reactive({
       formData: {
         name: 'plugin-cors',
+        description: '',
         allow_methods: '*',
         allow_origins: '*',
         allow_headers: '*',
@@ -89,6 +94,9 @@ export default {
     if (props.pluginConfigData != null) {
       if (props.pluginConfigData.name != null) {
         data.formData.name = props.pluginConfigData.name
+      }
+      if (props.pluginConfigData.description != null) {
+        data.formData.description = props.pluginConfigData.description
       }
       if (props.pluginConfigData.allow_methods != null) {
         data.formData.allow_methods = props.pluginConfigData.allow_methods
@@ -116,6 +124,7 @@ export default {
           target_id: props.targetResId ?? '',
           type: props.pluginConfigType ?? '',
           name: formData.name ?? '',
+          description: formData.description ?? '',
           enable: formData.enable == true ? 1 : 2,
           config: reactive({
             allow_credential: formData.allow_credential ?? '',
@@ -141,6 +150,7 @@ export default {
         // 更新插件配置
         let configData = reactive({
           name: formData.name ?? '',
+          description: formData.description ?? '',
           config: reactive({
             allow_credential: formData.allow_credential ?? '',
             allow_headers: formData.allow_headers ?? '',

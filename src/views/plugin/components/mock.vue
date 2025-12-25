@@ -7,8 +7,12 @@
     autocomplete="off"
     @finish="fn.onSubmit"
   >
-    <a-form-item label="插件名称" name="name">
+    <a-form-item label="配置名称" name="name">
       <a-input v-model:value="data.formData.name" />
+    </a-form-item>
+
+    <a-form-item label="插件描述" name="description">
+      <a-textarea v-model:value="data.formData.description" :rows="2" placeholder="请输入插件配置描述" />
     </a-form-item>
 
     <a-form-item label="response_type" name="response_type" :rules="schemaPluginMock.response_type">
@@ -113,6 +117,7 @@ export default {
     const data = reactive({
       formData: {
         name: 'plugin-mock',
+        description: '',
         response_type: 'application/json',
         http_code: 200,
         http_body: '',
@@ -127,6 +132,9 @@ export default {
     if (props.pluginConfigData != null) {
       if (props.pluginConfigData.name != null) {
         data.formData.name = props.pluginConfigData.name
+      }
+      if (props.pluginConfigData.description != null) {
+        data.formData.description = props.pluginConfigData.description
       }
       if (props.pluginConfigData.response_type != null) {
         data.formData.response_type = props.pluginConfigData.response_type
@@ -187,6 +195,7 @@ export default {
           target_id: props.targetResId ?? '',
           type: props.pluginConfigType ?? '',
           name: formData.name ?? '',
+          description: formData.description ?? '',
           enable: formData.enable == true ? 1 : 2,
           config: reactive({
             response_type: formData.response_type ?? '',
@@ -211,6 +220,7 @@ export default {
         // 更新插件配置
         let configData = reactive({
           name: formData.name ?? '',
+          description: formData.description ?? '',
           config: reactive({
             response_type: formData.response_type ?? '',
             http_code: formData.http_code ?? '',

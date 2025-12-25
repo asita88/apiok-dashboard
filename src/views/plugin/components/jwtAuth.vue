@@ -7,8 +7,12 @@
     autocomplete="off"
     @finish="fn.onSubmit"
   >
-    <a-form-item label="插件名称" name="name" :rules="schemaPluginJwtAuth.name">
+    <a-form-item label="配置名称" name="name" :rules="schemaPluginJwtAuth.name">
       <a-input v-model:value="data.formData.name" />
+    </a-form-item>
+
+    <a-form-item label="插件描述" name="description">
+      <a-textarea v-model:value="data.formData.description" :rows="2" placeholder="请输入插件配置描述" />
     </a-form-item>
 
     <a-form-item label="jwt_key" name="jwt_key" :rules="schemaPluginJwtAuth.jwt_key">
@@ -58,6 +62,7 @@ export default {
     const data = reactive({
       formData: {
         name: 'plugin-jwt-auth',
+        description: '',
         jwt_key: '',
         enable: false
       }
@@ -69,6 +74,9 @@ export default {
     if (props.pluginConfigData != null) {
       if (props.pluginConfigData.name != null) {
         data.formData.name = props.pluginConfigData.name
+      }
+      if (props.pluginConfigData.description != null) {
+        data.formData.description = props.pluginConfigData.description
       }
       if (props.pluginConfigData.jwt_key != null) {
         data.formData.jwt_key = props.pluginConfigData.jwt_key
@@ -84,6 +92,7 @@ export default {
           target_id: props.targetResId ?? '',
           type: props.pluginConfigType ?? '',
           name: formData.name ?? '',
+          description: formData.description ?? '',
           enable: formData.enable == true ? 1 : 2,
           config: reactive({
             jwt_key: formData.jwt_key ?? ''
@@ -105,6 +114,7 @@ export default {
         // 更新插件配置
         let configData = reactive({
           name: formData.name ?? '',
+          description: formData.description ?? '',
           config: reactive({
             jwt_key: formData.jwt_key ?? ''
           })
