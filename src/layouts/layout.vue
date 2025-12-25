@@ -14,6 +14,10 @@
       }"
     >
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+        <a-menu-item key="dashboard" @click="$router.push('/dashboard')">
+          <DashboardOutlined />
+          <span>大盘</span>
+        </a-menu-item>
         <a-menu-item key="service" @click="$router.push('/service')">
           <AppstoreOutlined />
           <span>服务管理</span>
@@ -46,6 +50,10 @@
           <a-menu-item key="log" @click="$router.push('/log')">
             <FileTextOutlined />
             <span>操作日志</span>
+          </a-menu-item>
+          <a-menu-item key="access-log" @click="$router.push('/access-log')">
+            <FileTextOutlined />
+            <span>访问日志</span>
           </a-menu-item>
         </a-sub-menu>
       </a-menu>
@@ -80,7 +88,7 @@
       </a-layout-header>
 
       <!-- 主体 -->
-      <a-layout :style="{ marginLeft: '200px', marginTop: '64px' }">
+      <a-layout :style="{ marginLeft: '200px', marginTop: '64px', height: 'calc(100vh - 64px)' }">
         <!-- 内容 -->
         <a-layout-content class="content">
           <router-view></router-view>
@@ -100,6 +108,7 @@ import { watch, ref } from 'vue'
 import { $logout } from '@/api'
 import { message } from 'ant-design-vue'
 import {
+  DashboardOutlined,
   AppstoreOutlined,
   LinkOutlined,
   ClusterOutlined,
@@ -113,6 +122,7 @@ import router from '@/router'
 import store from '@/store'
 export default {
         components: {
+          DashboardOutlined,
           AppstoreOutlined,
           LinkOutlined,
           ClusterOutlined,
@@ -161,6 +171,11 @@ export default {
   margin: 10px;
   padding: 10px;
   background: #fff;
+  height: calc(100% - 20px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 .logo {
   height: 30px;

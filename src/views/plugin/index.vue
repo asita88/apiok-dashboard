@@ -164,9 +164,29 @@ import LimitReq from '../plugin/components/limitReq.vue'
 import LimitConn from '../plugin/components/limitConn.vue'
 import LimitCount from '../plugin/components/limitCount.vue'
 import Waf from '../plugin/components/waf.vue'
+import LogKafka from '../plugin/components/logKafka.vue'
+import LogMysql from '../plugin/components/logMysql.vue'
+import TrafficTag from '../plugin/components/trafficTag.vue'
+import RequestRewrite from '../plugin/components/requestRewrite.vue'
+import ResponseRewrite from '../plugin/components/responseRewrite.vue'
 
 export default {
-  components: { Plugin404, Cors, Mock, KeyAuth, JwtAuth, LimitReq, LimitConn, LimitCount, Waf },
+  components: {
+    Plugin404,
+    Cors,
+    Mock,
+    KeyAuth,
+    JwtAuth,
+    LimitReq,
+    LimitConn,
+    LimitCount,
+    Waf,
+    LogKafka,
+    LogMysql,
+    TrafficTag,
+    RequestRewrite,
+    ResponseRewrite
+  },
 
   props: {
     currentResId: {

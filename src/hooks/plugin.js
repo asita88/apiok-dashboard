@@ -9,7 +9,12 @@ export const HookPluginKeyComponentMap = function () {
     'limit-req': 'LimitReq',
     'limit-conn': 'LimitConn',
     'limit-count': 'LimitCount',
-    waf: 'Waf'
+    waf: 'Waf',
+    'log-kafka': 'LogKafka',
+    'log-mysql': 'LogMysql',
+    'traffic-tag': 'TrafficTag',
+    'request-rewrite': 'RequestRewrite',
+    'response-rewrite': 'ResponseRewrite'
   }
 }
 

@@ -60,6 +60,9 @@
                 bordered
               >
                 <template #bodyCell="{ column, record }">
+                  <template v-if="column.dataIndex === 'config'">
+                    <span v-html="fn.getConfigSummary(record.plugin_key, record.config)"></span>
+                  </template>
                   <template v-if="column.dataIndex === 'enable'">
                     <a-switch
                       v-model:checked="record.enable"
@@ -166,6 +169,7 @@ export default {
       pluginOpType: 1,
       configColumns: [
         { title: '配置名称', dataIndex: 'name', width: 150 },
+        { title: '核心参数', dataIndex: 'config', width: 300 },
         { title: '启用', dataIndex: 'enable', width: 80 },
         { title: '操作', dataIndex: 'operation', width: 120 }
       ]
@@ -323,6 +327,88 @@ export default {
       // 搜索功能已通过 computed 实现
     }
 
+    const getConfigSummary = (pluginKey, config) => {
+      if (!config || !pluginKey) return '-'
+      
+      const parts = []
+      
+      switch (pluginKey) {
+        case 'cors':
+          if (config.allow_origins) parts.push(`源: ${config.allow_origins}`)
+          if (config.allow_methods) parts.push(`方法: ${config.allow_methods}`)
+          break
+        case 'mock':
+          if (config.response_type) parts.push(`类型: ${config.response_type}`)
+          if (config.http_code) parts.push(`状态码: ${config.http_code}`)
+          break
+        case 'key-auth':
+          if (config.secret) parts.push(`密钥: ${config.secret.substring(0, 8)}***`)
+          break
+        case 'jwt-auth':
+          if (config.jwt_key) parts.push(`密钥: ${config.jwt_key.substring(0, 8)}***`)
+          break
+        case 'limit-req':
+          if (config.rate) parts.push(`速率: ${config.rate}/s`)
+          if (config.burst) parts.push(`突发: ${config.burst}`)
+          break
+        case 'limit-conn':
+          if (config.rate) parts.push(`速率: ${config.rate}`)
+          if (config.burst) parts.push(`突发: ${config.burst}`)
+          if (config.default_conn_delay) parts.push(`延迟: ${config.default_conn_delay}s`)
+          break
+        case 'limit-count':
+          if (config.count) parts.push(`次数: ${config.count}`)
+          if (config.time_window) parts.push(`窗口: ${config.time_window}s`)
+          break
+        case 'waf':
+          if (config.ip_whitelist?.ip_list?.length) {
+            parts.push(`白名单: ${config.ip_whitelist.ip_list.length}个`)
+          }
+          if (config.ip_blacklist?.ip_list?.length) {
+            parts.push(`黑名单: ${config.ip_blacklist.ip_list.length}个`)
+          }
+          if (config.rules?.rule_list?.length) {
+            parts.push(`规则: ${config.rules.rule_list.length}条`)
+          }
+          break
+        case 'log-kafka':
+          if (config.brokers?.length) parts.push(`Brokers: ${config.brokers.length}个`)
+          if (config.topic) parts.push(`Topic: ${config.topic}`)
+          break
+        case 'log-mysql':
+          if (config.host) parts.push(`主机: ${config.host}`)
+          if (config.database) parts.push(`数据库: ${config.database}`)
+          if (config.table_name) parts.push(`表: ${config.table_name}`)
+          break
+        case 'traffic-tag':
+          if (config.tags) {
+            const tagKeys = Object.keys(config.tags)
+            if (tagKeys.length) parts.push(`标签: ${tagKeys.join(', ')}`)
+          }
+          break
+        case 'request-rewrite':
+          if (config.uri_rewrite?.type) parts.push(`URI重写: ${config.uri_rewrite.type}`)
+          if (config.headers && Object.keys(config.headers).length) {
+            parts.push(`请求头: ${Object.keys(config.headers).length}个`)
+          }
+          if (config.query_args && Object.keys(config.query_args).length) {
+            parts.push(`查询参数: ${Object.keys(config.query_args).length}个`)
+          }
+          break
+        case 'response-rewrite':
+          if (config.status_code) parts.push(`状态码: ${config.status_code}`)
+          if (config.body_rewrite?.type) parts.push(`体重写: ${config.body_rewrite.type}`)
+          if (config.headers && Object.keys(config.headers).length) {
+            parts.push(`响应头: ${Object.keys(config.headers).length}个`)
+          }
+          break
+        default:
+          return '-'
+      }
+      
+      return parts.length > 0 ? parts.join(' | ') : '-'
+    }
+
     onMounted(async () => {
       await loadPluginList()
     })
@@ -335,7 +421,8 @@ export default {
       hideConfigForm,
       enableChange,
       deleteConfig,
-      loadConfiguredPlugins
+      loadConfiguredPlugins,
+      getConfigSummary
     })
 
     return {

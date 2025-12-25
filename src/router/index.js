@@ -62,9 +62,19 @@ const routes = [
         component: () => import('@/views/log')
       },
       {
+        path: '/access-log',
+        name: 'access-log',
+        component: () => import('@/views/access-log')
+      },
+      {
         path: '/global-plugin',
         name: 'global-plugin',
         component: () => import('@/views/global-plugin')
+      },
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: () => import('@/views/dashboard')
       }
     ]
   },
